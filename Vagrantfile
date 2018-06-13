@@ -159,7 +159,7 @@ Vagrant.configure(2) do |config|
       # Provider-independent options
       machine.vm.hostname = "gd2-#{node_index}"
       machine.vm.synced_folder '.', '/vagrant', disabled: true
-      machine.vm.synced_folder '/home/smukherjee/dev/redhat/tendrl/golang/src/github.com/gluster/glusterd2/build/', '/vagrant'
+      machine.vm.synced_folder '/home/dpivonka/golang/src/github.com/gluster/glusterd2/build/', '/vagrant'
 
       machine.vm.provider 'virtualbox' do |vb, override|
         # Make this a linked clone for cow snapshot based root disks
@@ -265,4 +265,54 @@ Vagrant.configure(2) do |config|
       end
     end
   end
+
+  config.vm.define "prometheus" do | prometheus |
+    prometheus.vm.hostname = "prometheus"
+    prometheus.vm.synced_folder '.', '/vagrant', disabled: true
+    prometheus.vm.synced_folder '/home/dpivonka/golang/src/github.com/gluster/glusterd2/build/', '/vagrant'
+
+    prometheus.vm.provider 'virtualbox' do |vb, override|
+      # Make this a linked clone for cow snapshot based root disks
+      vb.linked_clone = true
+
+      # Set VM resources
+      vb.memory = VMMEM
+      vb.cpus = VMCPU
+
+      # Don't display the VirtualBox GUI when booting the machine
+      vb.gui = false
+
+      # give this VM a proper name
+      vb.name = "prometheus"
+
+      # attach brick disks
+      #vb_attach_disks(disk_count, vb, "prometheus")
+
+      # Accelerate SSH / Ansible connections (https://github.com/mitchellh/vagrant/issues/1807)
+      vb.customize ['modifyvm', :id, '--natdnshostresolver1', 'on']
+      vb.customize ['modifyvm', :id, '--natdnsproxy1', 'on']
+    end
+
+    prometheus.vm.provider 'libvirt' do |libvirt, override|
+      # Set VM resources
+      libvirt.memory = VMMEM
+      libvirt.cpus = VMCPU
+
+      # Use virtio device drivers
+      libvirt.nic_model_type = 'virtio'
+      libvirt.disk_bus = 'virtio'
+
+      # connect to local libvirt daemon as root
+      libvirt.username = 'root'
+
+      # attach brick disks
+      #libvirt_attach_disks(disk_count, libvirt)
+    end
+
+    prometheus.vm.provision :prepare_env, type: :ansible do |ansible|
+      ansible.playbook = 'ansible/prepare-prometheus.yml'
+    end
+
+  end
+
 end
