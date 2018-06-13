@@ -1,2 +1,3 @@
 storage_node_count: 3
 disk_count: 2
+glusterd2_build: '/home/dpivonka/golang/src/github.com/gluster/glusterd2/build/'

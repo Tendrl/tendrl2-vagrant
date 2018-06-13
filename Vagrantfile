@@ -159,7 +159,7 @@ Vagrant.configure(2) do |config|
       # Provider-independent options
       machine.vm.hostname = "gd2-#{node_index}"
       machine.vm.synced_folder '.', '/vagrant', disabled: true
-      machine.vm.synced_folder '/home/dpivonka/golang/src/github.com/gluster/glusterd2/build/', '/vagrant'
+      machine.vm.synced_folder tendrl_conf['glusterd2_build'], '/vagrant'
 
       machine.vm.provider 'virtualbox' do |vb, override|
         # Make this a linked clone for cow snapshot based root disks
@@ -266,12 +266,12 @@ Vagrant.configure(2) do |config|
     end
   end
 
-  config.vm.define "prometheus" do | prometheus |
-    prometheus.vm.hostname = "prometheus"
-    prometheus.vm.synced_folder '.', '/vagrant', disabled: true
-    prometheus.vm.synced_folder '/home/dpivonka/golang/src/github.com/gluster/glusterd2/build/', '/vagrant'
+  config.vm.define "tendrl-server" do | machine |
+    machine.vm.hostname = "tendrl-server"
+    machine.vm.synced_folder '.', '/vagrant', disabled: true
+    machine.vm.synced_folder '/home/dpivonka/golang/src/github.com/gluster/glusterd2/build/', '/vagrant'
 
-    prometheus.vm.provider 'virtualbox' do |vb, override|
+    machine.vm.provider 'virtualbox' do |vb, override|
       # Make this a linked clone for cow snapshot based root disks
       vb.linked_clone = true
 
@@ -283,7 +283,7 @@ Vagrant.configure(2) do |config|
       vb.gui = false
 
       # give this VM a proper name
-      vb.name = "prometheus"
+      vb.name = "tendrl-server"
 
       # attach brick disks
       #vb_attach_disks(disk_count, vb, "prometheus")
@@ -293,7 +293,7 @@ Vagrant.configure(2) do |config|
       vb.customize ['modifyvm', :id, '--natdnsproxy1', 'on']
     end
 
-    prometheus.vm.provider 'libvirt' do |libvirt, override|
+    machine.vm.provider 'libvirt' do |libvirt, override|
       # Set VM resources
       libvirt.memory = VMMEM
       libvirt.cpus = VMCPU
@@ -309,7 +309,7 @@ Vagrant.configure(2) do |config|
       #libvirt_attach_disks(disk_count, libvirt)
     end
 
-    prometheus.vm.provision :prepare_env, type: :ansible do |ansible|
+    machine.vm.provision :prepare_env, type: :ansible do |ansible|
       ansible.playbook = 'ansible/prepare-prometheus.yml'
     end
 
