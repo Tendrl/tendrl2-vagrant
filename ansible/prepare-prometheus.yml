@@ -1,6 +1,6 @@
 ---
 
-- hosts: all
+- hosts: tendrl-server
   become: true
   tasks:
     - debug:
