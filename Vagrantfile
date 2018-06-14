@@ -196,12 +196,13 @@ Vagrant.configure(2) do |config|
       #libvirt_attach_disks(disk_count, libvirt)
     end
 
-    machine.vm.provision :prepare_env, type: :ansible do |ansible|
+    machine.vm.provision :prepare_tendrl, type: :ansible do |ansible|
       ansible.groups = {
         'tendrl-servers' => ["tendrl-server"]
       }
-      ansible.playbook = 'ansible/prepare-prometheus.yml'
+      ansible.playbook = 'ansible/prepare-tendrl-server.yml'
     end
+
 
   end
 

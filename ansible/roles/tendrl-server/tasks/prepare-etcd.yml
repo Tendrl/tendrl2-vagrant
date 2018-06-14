@@ -1,0 +1,8 @@
+- name: Install etcd
+  yum:
+    name=etcd
+    state=present
+
+- name: Use http as protocol in etcd urls
+  set_fact: etcd_url_protocol="http"
+  when: etcd_tls_client_auth|bool == False
