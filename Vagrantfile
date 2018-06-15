@@ -198,7 +198,10 @@ Vagrant.configure(2) do |config|
 
     machine.vm.provision :prepare_tendrl, type: :ansible do |ansible|
       ansible.groups = {
-        'tendrl-servers' => ["tendrl-server"]
+        'tendrl-servers' => ["tendrl-server"],
+        'all:vars' => {'etcd_ip_address' => '192.0.2.1',
+                       'etcd_fqdn' => 'tendrl.example.com',
+                       'graphite_fqdn' => 'tendrl.example.com'}
       }
       ansible.playbook = 'ansible/prepare-tendrl-server.yml'
     end
