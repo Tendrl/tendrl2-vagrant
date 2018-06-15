@@ -1,2 +1,0 @@
-- include: prepare-etcd.yml
-- include: prepare-prometheus.yml

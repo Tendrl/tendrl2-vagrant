@@ -1,0 +1,5 @@
+- hosts: tendrl2-servers
+  become: true
+
+  roles:
+    - tendrl2.server

@@ -1,5 +1,0 @@
-- hosts: tendrl-server
-  become: true
-
-  roles:
-    - tendrl-server
