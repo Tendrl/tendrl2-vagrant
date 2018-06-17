@@ -1,6 +1,5 @@
 ---
 - hosts: tendrl2-server
-  user: vagrant
   become: yes
   vars:
     configure_firewalld_for_tendrl: false
