@@ -221,7 +221,7 @@ Vagrant.configure(2) do |config|
           ansible.groups = {
             'tendrl2-servers' => ['tendrl2-server']
           }
-          ansible.playbook = 'ansible/prepare-tendrl2-server.yml'
+          ansible.playbook = 'ansible/tendrl2-server.yml'
         end
 
         #machine.vm.provision :update_tendrl, type: :ansible, run: 'never' do |ansible|
